@@ -16,6 +16,7 @@
         .errorlist {
             display: block;
         }
+
     </style>
 </head>
 <body>
@@ -25,9 +26,24 @@
         <form method="post" action="{% url 'index' %}">
             {% csrf_token %}
             {{ user_change_form.as_p }}
-            <button type="submit" id="change">Change user</button>
+            <button name="change" type="submit">Change user</button>
         </form>
     </div>
+
+    <div style="border: 1px solid black; border-radius: 8px; width: fit-content; padding: 6px;">
+        <form method="post" action="{% url 'index' %}">
+            {% csrf_token %}
+            {{ user_search_form.as_p }}
+            <button name="search" type="submit">Search for user</button>
+        </form>
+    </div>
+
+    {% if found_users %}
+        <h5>Results:</h5>
+        {% for f_user in found_users %}
+            <p>{{ f_user.username }}</p>
+        {% endfor %}
+    {% endif %}
 
     <a href="/accounts/logout/?next=/">Logout</a>
 </body>
