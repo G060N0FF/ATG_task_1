@@ -8,4 +8,6 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
     # registration path
     path('register/', views.register, name='register'),
+    # chat url
+    path('chat/', views.chat, name='chat'),
 ]

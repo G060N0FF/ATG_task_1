@@ -70,3 +70,10 @@ def register(request):
 
     context = {'form': form}
     return render(request, 'registration/register.html', context)
+
+
+# chat view
+@login_required
+def chat(request):
+    context = {}
+    return render(request, 'App/chat.html', context)
