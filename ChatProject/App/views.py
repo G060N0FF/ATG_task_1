@@ -25,14 +25,11 @@ def register(request):
             username = form.cleaned_data['username']
             password = form.cleaned_data['password1']
 
-            # validate data
-            pass
-
             # create a User instance
             user = authenticate(request, username=username, password=password)
             login(request, user)
 
-        return redirect('/')
+            return redirect('/')
 
     context = {'form': form}
     return render(request, 'registration/register.html', context)
