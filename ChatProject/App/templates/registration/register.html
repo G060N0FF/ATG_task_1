@@ -13,8 +13,49 @@
     <form method="post" action="{% url 'register' %}">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit">Register</button>
+        <button id="register" type="submit">Register</button>
     </form>
+    <p id="question"></p>
+    <input id="answer" type="text">
+    <button id="captcha_btn">Submit captcha</button>
+    <br></br>
     <a href="/accounts/login/?next=/">Already have an account? Click here!</a>
 </body>
+
+<!--Arithmetic captcha-->
+<script>
+    // disable the button on load
+    var btn = document.querySelector('#register');
+    btn.disabled = true;
+
+    // generate the question
+    var num1 = Math.floor(Math.random() * 10) + 1;
+    var num2 = Math.floor(Math.random() * 10) + 1;
+    var ans1 = num1 + num2;
+
+    // display the question
+    var captcha = document.querySelector('#question');
+    captcha.textContent = String(num1) + ' + ' + String(num2) + ' = ?';
+
+    // enable the registration after captcha
+    var captcha_btn = document.querySelector('#captcha_btn')
+    captcha_btn.addEventListener('click', function(){
+        var captcha_ans = document.querySelector('#answer');
+        var ans2 = captcha_ans.value;
+        if(ans1 == ans2){
+            btn.disabled = false;
+            alert('You can now register');
+        }
+        else{
+            alert('Wrong answer');
+            captcha_ans.value = '';
+
+            // reset captcha
+            num1 = Math.floor(Math.random() * 10) + 1;
+            num2 = Math.floor(Math.random() * 10) + 1;
+            ans1 = num1 + num2;
+            captcha.textContent = String(num1) + ' + ' + String(num2) + ' = ?';
+        }
+    });
+</script>
 </html>
