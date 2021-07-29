@@ -7,9 +7,28 @@
         html, body{
             font-family: 'Source Sans Pro', sans-serif;
         }
+        .helptext {
+            visibility: hidden;
+        }
+        ul {
+            display: None;
+        }
+        .errorlist {
+            display: block;
+        }
     </style>
 </head>
 <body>
+    <h3>Welcome, {{ user }}</h3>
+
+    <div style="border: 1px solid black; border-radius: 8px; width: fit-content; padding: 6px;">
+        <form method="post" action="{% url 'index' %}">
+            {% csrf_token %}
+            {{ user_change_form.as_p }}
+            <button type="submit" id="change">Change user</button>
+        </form>
+    </div>
+
     <a href="/accounts/logout/?next=/">Logout</a>
 </body>
 </html>
