@@ -10,4 +10,6 @@ urlpatterns = [
     path('register/', views.register, name='register'),
     # chat url
     path('chat/', views.chat, name='chat'),
+    # load messages when a user joins the chat lobby
+    path('load_messages/', views.load_messages, name='load_messages')
 ]

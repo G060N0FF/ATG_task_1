@@ -16,6 +16,8 @@
     <textarea id="chat-log" cols="100" rows="20"></textarea><br>
     <input id="chat-message-input" type="text" size="100"><br>
     <input id="chat-message-submit" type="button" value="Send">
+
+    <!--Live messaging-->
     <script>
         const chatSocket = new WebSocket(
             'ws://'
@@ -47,6 +49,25 @@
             }));
             messageInputDom.value = '';
         };
+    </script>
+
+    <!--jQuery-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <!--Preload older text messages-->
+    <script>
+        $.ajax({
+            type: 'GET',
+            url: "{% url 'load_messages' %}",
+            success: function (response) {
+                for(let i = 0; i < response.data.length; i++){
+                    document.querySelector('#chat-log').value += (response.data[i].username + ": " + response.data[i].text + '\n');
+                }
+            },
+            error: function (response) {
+                console.log(response)
+            }
+        })
     </script>
 </body>
 </html>

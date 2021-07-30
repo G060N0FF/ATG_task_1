@@ -4,6 +4,8 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate
 from .forms import SearchForm
+from .models import Message
+from django.http import JsonResponse
 
 
 # index view
@@ -77,3 +79,15 @@ def register(request):
 def chat(request):
     context = {}
     return render(request, 'App/chat.html', context)
+
+
+# preload messages
+@ login_required
+def load_messages(request):
+    messages = [{'username': msg.user.username, 'text': msg.text} for msg in Message.objects.all()]
+
+    return JsonResponse(
+        {
+            'data': messages,
+        }
+    )
