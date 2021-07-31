@@ -19,11 +19,20 @@
 
     <!--Live messaging-->
     <script>
-        const chatSocket = new WebSocket(
-            'ws://'
-            + window.location.host
-            + '/ws/chat/lobby/'
-        );
+        if (window.location.protocol != "https:") {
+            const chatSocket = new WebSocket(
+                'ws://'
+                + window.location.host
+                + '/ws/chat/lobby/'
+            );
+        }
+        else {
+            const chatSocket = new WebSocket(
+                'wss://'
+                + window.location.host
+                + '/wss/chat/lobby/'
+            );
+        }
 
         chatSocket.onmessage = function(e) {
             const data = JSON.parse(e.data);
