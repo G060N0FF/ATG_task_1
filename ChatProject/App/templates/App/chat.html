@@ -19,15 +19,17 @@
 
     <!--Live messaging-->
     <script>
+        var chatSocket = '';
+
         if (window.location.protocol != "https:") {
-            const chatSocket = new WebSocket(
+            chatSocket = new WebSocket(
                 'ws://'
                 + window.location.host
                 + '/ws/chat/lobby/'
             );
         }
         else {
-            const chatSocket = new WebSocket(
+            chatSocket = new WebSocket(
                 'wss://'
                 + window.location.host
                 + '/wss/chat/lobby/'
