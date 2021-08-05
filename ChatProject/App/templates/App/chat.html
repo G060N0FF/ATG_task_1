@@ -105,6 +105,11 @@
 
             msg.textContent = message[0] + ': ' + message[1];
 
+            let time = document.createElement('p');
+            time.setAttribute('style', 'size: 3px; color: gray;');
+            time.textContent = message[2];
+            msg.appendChild(time);
+
             chat_log.appendChild(msg);
         }
     </script>
