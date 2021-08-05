@@ -88,7 +88,7 @@ def register(request):
 # chat view
 @login_required
 def chat(request, room):
-    context = {'room': room}
+    context = {'room': room, 'user': request.user}
     return render(request, 'App/chat.html', context)
 
 
@@ -97,7 +97,7 @@ def chat(request, room):
 def load_messages(request):
     room = request.GET.get('room', None)
 
-    messages = [{'username': msg.user.username, 'text': msg.text} for msg in Message.objects.filter(group=room)]
+    messages = [[msg.user.username, msg.text] for msg in Message.objects.filter(group=room)]
 
     return JsonResponse(
         {

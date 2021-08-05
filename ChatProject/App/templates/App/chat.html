@@ -13,7 +13,9 @@
     <h3>Welcome to the chat room!</h3>
     <a href="/">Home</a>
     <br>
-    <textarea id="chat-log" cols="100" rows="20"></textarea><br>
+
+    <div id="chat-log" style="width: 675px; height: 300px; border: 1px solid black; overflow-y: scroll;"></div>
+
     <input id="chat-message-input" type="text" size="100"><br>
     <input id="chat-message-submit" type="button" value="Send">
 
@@ -43,7 +45,7 @@
 
         chatSocket.onmessage = function(e) {
             const data = JSON.parse(e.data);
-            document.querySelector('#chat-log').value += (data.message + '\n');
+            displayMessage(data.message);
         };
 
         chatSocket.onclose = function(e) {
@@ -78,13 +80,33 @@
             data: {'room': room},
             success: function (response) {
                 for(let i = 0; i < response.data.length; i++){
-                    document.querySelector('#chat-log').value += (response.data[i].username + ": " + response.data[i].text + '\n');
+                    displayMessage(response.data[i]);
                 }
             },
             error: function (response) {
-                console.log(response)
+                console.log(response);
             }
         })
+    </script>
+
+    <!--Display message-->
+    <script>
+        function displayMessage(message){
+            let chat_log = document.querySelector('#chat-log');
+
+            let msg = document.createElement('div');
+
+            if("{{ user.username }}" == message[0]){
+                msg.setAttribute('style', 'float: right; color: blue; width: 600px; text-align: right; overflow-wrap: break-word;');
+            }
+            else{
+                msg.setAttribute('style', 'float: left; width: 600px; text-align: left; overflow-wrap: break-word;');
+            }
+
+            msg.textContent = message[0] + ': ' + message[1];
+
+            chat_log.appendChild(msg);
+        }
     </script>
 </body>
 </html>
