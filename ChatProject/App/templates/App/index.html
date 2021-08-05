@@ -31,6 +31,14 @@
     </div>
 
     <div style="border: 1px solid black; border-radius: 8px; width: fit-content; padding: 6px;">
+        <form method="post" action="{% url 'index' %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ pfp_form.as_p }}
+            <button name="pfp" type="submit">Change profile picture</button>
+        </form>
+    </div>
+
+    <div style="border: 1px solid black; border-radius: 8px; width: fit-content; padding: 6px;">
         <form method="post" action="{% url 'index' %}">
             {% csrf_token %}
             {{ user_search_form.as_p }}

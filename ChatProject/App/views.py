@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate
-from .forms import SearchForm
+from .forms import SearchForm, PictureForm
 from .models import Message
 from django.http import JsonResponse
 
@@ -16,6 +16,9 @@ def index(request):
 
     # a form to search for users
     user_search_form = SearchForm()
+
+    # a form to change the profile picture
+    pfp_form = PictureForm()
 
     found_users = []
 
@@ -35,16 +38,24 @@ def index(request):
                     login(request, request.user)
 
         # check if the user has searched for other users
-        else:
+        elif 'query' in request.POST:
             user_search_form = SearchForm(request.POST)
             if user_search_form.is_valid():
                 query = request.POST['query']
                 found_users = User.objects.filter(username__icontains=query)
 
+        # check if the user has changed his/her profile picture
+        else:
+            pfp_form = PictureForm(request.POST, request.FILES)
+            if pfp_form.is_valid():
+                request.user.profile.profile_picture = request.FILES['picture']
+                request.user.profile.save()
+
     context = {
         'user': request.user,
         'user_change_form': user_change_form,
         'user_search_form': user_search_form,
+        'pfp_form': pfp_form,
         'found_users': found_users
     }
     return render(request, 'App/index.html', context)
