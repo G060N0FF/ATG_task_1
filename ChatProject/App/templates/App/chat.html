@@ -110,8 +110,49 @@
             time.textContent = message[2];
             msg.appendChild(time);
 
+            if("{{ user.username }}" == message[0]){
+                let dlt_btn = document.createElement('button');
+                dlt_btn.setAttribute('class', 'delete');
+                dlt_btn.setAttribute('style', 'color: red;');
+                dlt_btn.textContent = 'Delete';
+                dlt_btn.value = message[3];
+                msg.appendChild(dlt_btn);
+            }
+
             chat_log.appendChild(msg);
         }
+    </script>
+
+    <!--A script to delete messages-->
+    <script>
+        async function deleteButtons(){
+            await new Promise(r => setTimeout(r, 500));
+
+            var dlt_btns = document.querySelectorAll('.delete');
+
+            for(let i = 0; i < dlt_btns.length; i++){
+                console.log(i);
+
+                let curr_btn = dlt_btns[i];
+
+                curr_btn.addEventListener('click', function(){
+                    curr_btn.parentElement.parentElement.removeChild(curr_btn.parentElement);
+
+                    $.ajax({
+                        type: 'GET',
+                        url: "{% url 'delete_message' %}",
+                        data: {'id': curr_btn.value},
+                        success: function (response) {
+                            console.log(response);
+                        },
+                        error: function (response) {
+                            console.log(response);
+                        }
+                    })
+                });
+            }
+        }
+        deleteButtons();
     </script>
 </body>
 </html>

@@ -97,7 +97,7 @@ def chat(request, room):
 def load_messages(request):
     room = request.GET.get('room', None)
 
-    messages = [[msg.user.username, msg.text, str(msg.date_time).split('.')[0]] for msg in Message.objects.filter(group=room)]
+    messages = [[msg.user.username, msg.text, str(msg.date_time).split('.')[0], msg.pk] for msg in Message.objects.filter(group=room)]
 
     return JsonResponse(
         {
@@ -114,3 +114,13 @@ def create_url(request, second_id):
     new_url = max(curr_id, second_id) + '-' + min(curr_id, second_id)
 
     return redirect(f'/chat/{new_url}/')
+
+
+# delete message
+@login_required
+def delete_message(request):
+    id = request.GET.get('id', None)
+
+    Message.objects.get(pk=id).delete()
+
+    return JsonResponse({})
