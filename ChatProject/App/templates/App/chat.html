@@ -20,19 +20,24 @@
     <!--Live messaging-->
     <script>
         var chatSocket = '';
+        var room = "{{ room }}";
 
         if (window.location.protocol != "https:") {
             chatSocket = new WebSocket(
                 'ws://'
                 + window.location.host
-                + '/ws/chat/lobby/'
+                + '/ws/chat/'
+                + room
+                + '/'
             );
         }
         else {
             chatSocket = new WebSocket(
                 'wss://'
                 + window.location.host
-                + '/wss/chat/lobby/'
+                + '/wss/chat/'
+                + room
+                + '/'
             );
         }
 

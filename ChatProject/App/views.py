@@ -42,7 +42,7 @@ def index(request):
                 found_users = User.objects.filter(username__icontains=query)
 
     context = {
-        'user': request.user.username,
+        'user': request.user,
         'user_change_form': user_change_form,
         'user_search_form': user_search_form,
         'found_users': found_users
@@ -76,13 +76,13 @@ def register(request):
 
 # chat view
 @login_required
-def chat(request):
-    context = {}
+def chat(request, room):
+    context = {'room': room}
     return render(request, 'App/chat.html', context)
 
 
 # preload messages
-@ login_required
+@login_required
 def load_messages(request):
     messages = [{'username': msg.user.username, 'text': msg.text} for msg in Message.objects.all()]
 
@@ -91,3 +91,13 @@ def load_messages(request):
             'data': messages,
         }
     )
+
+
+@login_required
+def create_url(request, second_id):
+    curr_id = str(request.user.pk)
+    second_id = str(second_id)
+
+    new_url = max(curr_id, second_id) + '-' + min(curr_id, second_id)
+
+    return redirect('/chat/new_url/')

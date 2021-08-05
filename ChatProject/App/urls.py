@@ -1,5 +1,7 @@
 from django.urls import path, include
 from . import views
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     # home page
@@ -9,7 +11,9 @@ urlpatterns = [
     # registration path
     path('register/', views.register, name='register'),
     # chat url
-    path('chat/', views.chat, name='chat'),
+    path('chat/<path:room>/', views.chat, name='chat'),
     # load messages when a user joins the chat lobby
-    path('load_messages/', views.load_messages, name='load_messages')
-]
+    path('load_messages/', views.load_messages, name='load_messages'),
+    # create a url for two users to chat
+    path('create_url/<path:second_id>/', views.create_url, name='create_url'),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

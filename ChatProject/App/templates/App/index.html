@@ -19,7 +19,8 @@
     </style>
 </head>
 <body>
-    <h3>Welcome, {{ user }}</h3>
+    <img src="{{ user.profile.profile_picture.url }}" height="100px">
+    <h3>Welcome, {{ user.username }}</h3>
 
     <div style="border: 1px solid black; border-radius: 8px; width: fit-content; padding: 6px;">
         <form method="post" action="{% url 'index' %}">
@@ -40,11 +41,14 @@
     {% if found_users %}
         <h5>Results:</h5>
         {% for f_user in found_users %}
+            <img src="{{ f_user.profile.profile_picture.url }}" height="50px">
             <p>{{ f_user.username }}</p>
+            <br>
+            <a href="{% url 'create_url' f_user.id %}">Message</a>
         {% endfor %}
     {% endif %}
 
-    <a href="/chat/">Join the chat room</a>
+    <a href="/chat/lobby/">Join the chat room</a>
 
     <br>
     <a href="/accounts/logout/?next=/">Logout</a>
