@@ -17,5 +17,7 @@ urlpatterns = [
     # create a url for two users to chat
     path('create_url/<path:second_id>/', views.create_url, name='create_url'),
     # a path do delete a message from the database
-    path('delete_message/', views.delete_message, name='delete_message')
+    path('delete_message/', views.delete_message, name='delete_message'),
+    # a path to check the active status of a user
+    path('check_status/', views.check_status, name='check_status'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

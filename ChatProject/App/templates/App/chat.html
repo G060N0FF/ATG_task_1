@@ -10,7 +10,13 @@
     </style>
 </head>
 <body>
-    <h3>Welcome to the chat room!</h3>
+    {% if room == 'lobby' %}
+        <h3>Welcome to the chat room!</h3>
+    {% else %}
+        <h3 id="active_status"></h3>
+    {% endif %}
+
+
     <a href="/">Home</a>
     <br>
 
@@ -19,10 +25,51 @@
     <input id="chat-message-input" type="text" size="100"><br>
     <input id="chat-message-submit" type="button" value="Send">
 
+    <!--jQuery-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <!--A function to check other user's status-->
+    <script>
+        function checkStatus(){
+            // check the active status of the other user
+            if(room != 'lobby'){
+                var room_members = room.split('-');
+
+                var other_user = '';
+                if(room_members[0] == "{{ user.id }}"){
+                    other_user = room_members[1];
+                }
+                else{
+                    other_user = room_members[0];
+                }
+
+                // ajax call to check active status
+                $.ajax({
+                    type: 'GET',
+                    url: "{% url 'check_status' %}",
+                    data: {'id': other_user},
+                    success: function (response) {
+                        if(response.data.is_online){
+                            document.querySelector('#active_status').textContent = response.data.name + ': ' + 'Online';
+                        }
+                        else{
+                            document.querySelector('#active_status').textContent = response.data.name + ': ' + 'Offline';
+                        }
+                    },
+                    error: function (response) {
+                        console.log(response);
+                    }
+                })
+            }
+        }
+    </script>
+
     <!--Live messaging-->
     <script>
         var chatSocket = '';
         var room = "{{ room }}";
+
+        checkStatus();
 
         if (window.location.protocol != "https:") {
             chatSocket = new WebSocket(
@@ -68,9 +115,6 @@
             messageInputDom.value = '';
         };
     </script>
-
-    <!--jQuery-->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
     <!--Preload older text messages-->
     <script>
@@ -131,8 +175,6 @@
             var dlt_btns = document.querySelectorAll('.delete');
 
             for(let i = 0; i < dlt_btns.length; i++){
-                console.log(i);
-
                 let curr_btn = dlt_btns[i];
 
                 curr_btn.addEventListener('click', function(){

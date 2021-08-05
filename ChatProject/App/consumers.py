@@ -11,6 +11,9 @@ class ChatConsumer(WebsocketConsumer):
         self.room_group_name = 'chat_%s' % self.room_name
         self.user = self.scope["user"]
 
+        self.user.profile.is_online = True
+        self.user.profile.save()
+
         # Join room group
         async_to_sync(self.channel_layer.group_add)(
             self.room_group_name,
@@ -20,6 +23,9 @@ class ChatConsumer(WebsocketConsumer):
         self.accept()
 
     def disconnect(self, close_code):
+        self.user.profile.is_online = False
+        self.user.profile.save()
+
         # Leave room group
         async_to_sync(self.channel_layer.group_discard)(
             self.room_group_name,

@@ -124,3 +124,15 @@ def delete_message(request):
     Message.objects.get(pk=id).delete()
 
     return JsonResponse({})
+
+
+# check online status
+@login_required
+def check_status(request):
+    id = request.GET.get('id', None)
+
+    return JsonResponse(
+        {
+            'data': {'is_online': User.objects.get(pk=id).profile.is_online, 'name': User.objects.get(pk=id).username}
+        }
+    )
