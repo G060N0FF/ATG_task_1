@@ -95,7 +95,9 @@ def chat(request, room):
 # preload messages
 @login_required
 def load_messages(request):
-    messages = [{'username': msg.user.username, 'text': msg.text} for msg in Message.objects.all()]
+    room = request.GET.get('room', None)
+
+    messages = [{'username': msg.user.username, 'text': msg.text} for msg in Message.objects.filter(group=room)]
 
     return JsonResponse(
         {
@@ -111,4 +113,4 @@ def create_url(request, second_id):
 
     new_url = max(curr_id, second_id) + '-' + min(curr_id, second_id)
 
-    return redirect('/chat/new_url/')
+    return redirect(f'/chat/{new_url}/')

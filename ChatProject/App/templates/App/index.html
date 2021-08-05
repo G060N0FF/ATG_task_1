@@ -51,11 +51,12 @@
         {% for f_user in found_users %}
             <img src="{{ f_user.profile.profile_picture.url }}" height="50px">
             <p>{{ f_user.username }}</p>
-            <br>
             <a href="{% url 'create_url' f_user.id %}">Message</a>
         {% endfor %}
     {% endif %}
 
+    <br>
+    <br>
     <a href="/chat/lobby/">Join the chat room</a>
 
     <br>

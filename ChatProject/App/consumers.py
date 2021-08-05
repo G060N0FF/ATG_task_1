@@ -33,7 +33,7 @@ class ChatConsumer(WebsocketConsumer):
 
         self.user = self.scope["user"]
 
-        new_message = Message.objects.create(user=self.user, text=message)
+        new_message = Message.objects.create(user=self.user, text=message, group=self.room_name)
 
         # Send message to room group
         async_to_sync(self.channel_layer.group_send)(

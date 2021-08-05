@@ -75,6 +75,7 @@
         $.ajax({
             type: 'GET',
             url: "{% url 'load_messages' %}",
+            data: {'room': room},
             success: function (response) {
                 for(let i = 0; i < response.data.length; i++){
                     document.querySelector('#chat-log').value += (response.data[i].username + ": " + response.data[i].text + '\n');
