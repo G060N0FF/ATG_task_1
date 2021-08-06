@@ -4,6 +4,9 @@ from channels.generic.websocket import WebsocketConsumer
 
 from .models import Message
 
+import base64
+from django.core.files.base import ContentFile
+
 
 class ChatConsumer(WebsocketConsumer):
     def connect(self):
@@ -36,17 +39,24 @@ class ChatConsumer(WebsocketConsumer):
     def receive(self, text_data):
         text_data_json = json.loads(text_data)
         message = text_data_json['message']
+        image = text_data_json['dataURL']
 
         self.user = self.scope["user"]
 
-        new_message = Message.objects.create(user=self.user, text=message, group=self.room_name)
+        if message:
+            new_message = Message.objects.create(user=self.user, text=message, group=self.room_name)
+        if image:
+            format, imgstr = image.split(';base64,')
+            ext = format.split('/')[-1]
+            data = ContentFile(base64.b64decode(imgstr), name='temp.' + ext)
+            new_message = Message.objects.create(user=self.user, group=self.room_name, image=data)
 
         # Send message to room group
         async_to_sync(self.channel_layer.group_send)(
             self.room_group_name,
             {
                 'type': 'chat_message',
-                'message': [self.user.username, message, str(new_message.date_time).split('.')[0], new_message.pk]
+                'message': [self.user.username, message, str(new_message.date_time).split('.')[0], new_message.pk, new_message.image.url]
             }
         )
 

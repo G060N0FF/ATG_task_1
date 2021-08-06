@@ -23,6 +23,7 @@
     <div id="chat-log" style="width: 675px; height: 300px; border: 1px solid black; overflow-y: scroll;"></div>
 
     <input id="chat-message-input" type="text" size="100"><br>
+    <input id="chat-image-input" type="file" accept="image/png, image/jpeg">
     <input id="chat-message-submit" type="button" value="Send">
 
     <!--jQuery-->
@@ -110,10 +111,22 @@
             const messageInputDom = document.querySelector('#chat-message-input');
             const message = messageInputDom.value;
             chatSocket.send(JSON.stringify({
-                'message': message
+                'message': message,
+                'dataURL': ''
             }));
             messageInputDom.value = '';
         };
+
+        document.getElementById('chat-image-input').addEventListener('change', function(event){
+            var files = event.target;
+            var file = files.files[0];
+            toDataURL(file, function(dataURL){
+                chatSocket.send(JSON.stringify({
+                    'message': '',
+                    'dataURL': dataURL
+                }))
+            })
+        })
     </script>
 
     <!--Preload older text messages-->
@@ -163,6 +176,13 @@
                 msg.appendChild(dlt_btn);
             }
 
+            if(message[4]){
+                let img = document.createElement('img');
+                img.setAttribute('src', message[4]);
+                img.setAttribute('height', '100px');
+                msg.appendChild(img);
+            }
+
             chat_log.appendChild(msg);
         }
     </script>
@@ -195,6 +215,23 @@
             }
         }
         deleteButtons();
+    </script>
+
+    <!---->
+    <script>
+        function toDataURL(file, callback) {
+            if(file){
+                var reader = new FileReader();
+                reader.onload = function () {
+                    var dataURL = reader.result;
+                    callback(dataURL);
+                }
+                reader.readAsDataURL(file);
+            }
+            else{
+                console.log(file);
+            }
+        }
     </script>
 </body>
 </html>

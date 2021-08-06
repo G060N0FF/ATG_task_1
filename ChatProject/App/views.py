@@ -97,7 +97,7 @@ def chat(request, room):
 def load_messages(request):
     room = request.GET.get('room', None)
 
-    messages = [[msg.user.username, msg.text, str(msg.date_time).split('.')[0], msg.pk] for msg in Message.objects.filter(group=room)]
+    messages = [[msg.user.username, msg.text, str(msg.date_time).split('.')[0], msg.pk, msg.image.url] if msg.image else [msg.user.username, msg.text, str(msg.date_time).split('.')[0], msg.pk] for msg in Message.objects.filter(group=room)]
 
     return JsonResponse(
         {

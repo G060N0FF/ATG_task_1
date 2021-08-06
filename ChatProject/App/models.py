@@ -6,10 +6,11 @@ from django.db.models.signals import post_save
 
 
 class Message(models.Model):
-    text = models.CharField(max_length=200)
+    text = models.CharField(max_length=200, default='')
     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, null=True, related_name='messages')
     date_time = models.DateTimeField(auto_now_add=True)
     group = models.CharField(max_length=200)
+    image = models.ImageField(default='')
 
 
 # a profile model created when the user registers
