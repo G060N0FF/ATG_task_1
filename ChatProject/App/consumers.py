@@ -51,12 +51,14 @@ class ChatConsumer(WebsocketConsumer):
             data = ContentFile(base64.b64decode(imgstr), name='temp.' + ext)
             new_message = Message.objects.create(user=self.user, group=self.room_name, image=data)
 
+        new_msg = [self.user.username, message, str(new_message.date_time).split('.')[0], new_message.pk, new_message.image.url] if new_message.image else [self.user.username, message, str(new_message.date_time).split('.')[0], new_message.pk]
+
         # Send message to room group
         async_to_sync(self.channel_layer.group_send)(
             self.room_group_name,
             {
                 'type': 'chat_message',
-                'message': [self.user.username, message, str(new_message.date_time).split('.')[0], new_message.pk, new_message.image.url]
+                'message': new_msg
             }
         )
 
