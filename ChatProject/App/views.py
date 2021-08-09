@@ -150,3 +150,38 @@ def check_status(request):
             'data': {'is_online': User.objects.get(pk=id).profile.is_online, 'name': User.objects.get(pk=id).username}
         }
     )
+
+
+# a view to see group options
+def group(request, group_id):
+    group = ChatGroup.objects.get(pk=group_id)
+
+    # security check
+    if request.user not in group.users.all():
+        return redirect('/')
+
+    user_search_form = SearchForm()
+    found_users = []
+
+    if request.method == 'POST':
+        user_search_form = SearchForm(request.POST)
+        if user_search_form.is_valid():
+            query = request.POST['query']
+            found_users = User.objects.filter(username__icontains=query)
+
+    context = {'group': group, 'user_search_form': user_search_form, 'found_users': found_users}
+    return render(request, 'App/group.html', context)
+
+
+# a view to add group members
+def add_to_group(request, group_id, user_id):
+    group = ChatGroup.objects.get(pk=group_id)
+
+    # security check
+    if request.user not in group.users.all():
+        return redirect('/')
+
+    group.users.add(User.objects.get(pk=user_id))
+    group.save()
+
+    return redirect('/group/'+str(group.pk))

@@ -71,7 +71,8 @@
     <div style="border: 1px solid black; border-radius: 8px; width: fit-content; padding: 6px;">
         <h4>Groups:</h4>
         {% for group in user.chat_groups.all %}
-            <p>{{ group.name }}</p>
+            <a href="{% url 'group' group.id %}">{{ group.name }}</a>
+            <br>
         {% endfor %}
     </div>
 

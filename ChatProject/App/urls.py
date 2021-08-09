@@ -20,4 +20,8 @@ urlpatterns = [
     path('delete_message/', views.delete_message, name='delete_message'),
     # a path to check the active status of a user
     path('check_status/', views.check_status, name='check_status'),
+    # a path to see group options
+    path('group/<path:group_id>', views.group, name='group'),
+    # a path to add users to the group
+    path('add_to_group/<path:group_id>/<path:user_id>/', views.add_to_group, name='add_to_group'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Group</title>
+    <style>
+        html, body{
+            font-family: 'Source Sans Pro', sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <h1>Group: {{ group.name }}</h1>
+
+    <div style="border: 1px solid black; border-radius: 8px; width: fit-content; padding: 6px;">
+        <h3>Members:</h3>
+        {% for member in group.users.all %}
+            <p>{{ member.username }}</p>
+        {% endfor %}
+    </div>
+
+    <div style="border: 1px solid black; border-radius: 8px; width: fit-content; padding: 6px;">
+        <form method="post" action="{% url 'group' group.id %}">
+            {% csrf_token %}
+            {{ user_search_form.as_p }}
+            <button type="submit">Search for users</button>
+        </form>
+    </div>
+
+    {% if found_users %}
+        <h5>Results:</h5>
+        {% for f_user in found_users %}
+            <img src="{{ f_user.profile.profile_picture.url }}" height="50px">
+            <p>{{ f_user.username }}</p>
+            <a href="{% url 'add_to_group' group.id f_user.id %}">Add to group</a>
+        {% endfor %}
+    {% endif %}
+</body>
+</html>

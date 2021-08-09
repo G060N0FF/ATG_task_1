@@ -23,7 +23,7 @@ class Profile(models.Model):
 # a model for the chat group
 class ChatGroup(models.Model):
     users = models.ManyToManyField(get_user_model(), related_name='chat_groups')
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=200, unique=True)
 
 
 @receiver(post_save, sender=User)
