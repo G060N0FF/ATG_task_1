@@ -7,3 +7,7 @@ class SearchForm(forms.Form):
 
 class PictureForm(forms.Form):
     picture = forms.ImageField()
+
+
+class ChatGroupForm(forms.Form):
+    name = forms.CharField(max_length=200)

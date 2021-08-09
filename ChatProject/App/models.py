@@ -20,6 +20,12 @@ class Profile(models.Model):
     is_online = models.BooleanField(default=False)
 
 
+# a model for the chat group
+class ChatGroup(models.Model):
+    users = models.ManyToManyField(get_user_model(), related_name='chat_groups')
+    name = models.CharField(max_length=200)
+
+
 @receiver(post_save, sender=User)
 def update_profile_signal(sender, instance, created, **kwargs):
     if created:

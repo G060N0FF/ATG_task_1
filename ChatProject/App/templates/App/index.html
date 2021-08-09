@@ -56,8 +56,24 @@
     {% endif %}
 
     <br>
-    <br>
     <a href="/chat/lobby/">Join the chat room</a>
+    <br>
+    <br>
+
+    <div style="border: 1px solid black; border-radius: 8px; width: fit-content; padding: 6px;">
+        <form method="post" action="{% url 'index' %}">
+            {% csrf_token %}
+            {{ group_create_form.as_p }}
+            <button name="group_create" type="submit">Create group</button>
+        </form>
+    </div>
+
+    <div style="border: 1px solid black; border-radius: 8px; width: fit-content; padding: 6px;">
+        <h4>Groups:</h4>
+        {% for group in user.chat_groups.all %}
+            <p>{{ group.name }}</p>
+        {% endfor %}
+    </div>
 
     <br>
     <a href="/accounts/logout/?next=/">Logout</a>

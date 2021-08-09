@@ -3,8 +3,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate
-from .forms import SearchForm, PictureForm
-from .models import Message
+from .forms import SearchForm, PictureForm, ChatGroupForm
+from .models import Message, ChatGroup
 from django.http import JsonResponse
 
 
@@ -19,6 +19,9 @@ def index(request):
 
     # a form to change the profile picture
     pfp_form = PictureForm()
+
+    # a form to create a group
+    group_create_form = ChatGroupForm()
 
     found_users = []
 
@@ -44,6 +47,16 @@ def index(request):
                 query = request.POST['query']
                 found_users = User.objects.filter(username__icontains=query)
 
+        # check if the user has created a group
+        elif 'name' in request.POST:
+            group_create_form = ChatGroupForm(request.POST)
+            if group_create_form.is_valid():
+                name = request.POST['name']
+                new_group = ChatGroup(name=name)
+                new_group.save()
+                new_group.users.add(request.user)
+                new_group.save()
+
         # check if the user has changed his/her profile picture
         else:
             pfp_form = PictureForm(request.POST, request.FILES)
@@ -56,7 +69,8 @@ def index(request):
         'user_change_form': user_change_form,
         'user_search_form': user_search_form,
         'pfp_form': pfp_form,
-        'found_users': found_users
+        'found_users': found_users,
+        'group_create_form': group_create_form,
     }
     return render(request, 'App/index.html', context)
 
