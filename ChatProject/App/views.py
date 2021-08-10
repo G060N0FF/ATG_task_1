@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate
-from .forms import SearchForm, PictureForm, ChatGroupForm
+from .forms import SearchForm, PictureForm, ChatGroupForm, FindGroupForm
 from .models import Message, ChatGroup
 from django.http import JsonResponse
 
@@ -23,7 +23,11 @@ def index(request):
     # a form to create a group
     group_create_form = ChatGroupForm()
 
+    # a form to search for groups
+    find_group_form = FindGroupForm()
+
     found_users = []
+    found_groups = []
 
     # if a form has been filled
     if request.method == 'POST':
@@ -57,6 +61,13 @@ def index(request):
                 new_group.users.add(request.user)
                 new_group.save()
 
+        # check if the user is searching for groups
+        elif 'gr_name' in request.POST:
+            find_group_form = FindGroupForm(request.POST)
+            if find_group_form.is_valid():
+                gr_name = request.POST['gr_name']
+                found_groups = ChatGroup.objects.filter(name__icontains=gr_name)
+
         # check if the user has changed his/her profile picture
         else:
             pfp_form = PictureForm(request.POST, request.FILES)
@@ -71,6 +82,8 @@ def index(request):
         'pfp_form': pfp_form,
         'found_users': found_users,
         'group_create_form': group_create_form,
+        'find_group_form': find_group_form,
+        'found_groups': found_groups,
     }
     return render(request, 'App/index.html', context)
 
@@ -198,3 +211,13 @@ def leave_group(request, group_id):
     group.users.remove(request.user)
 
     return redirect('/group/'+str(group.pk))
+
+
+# a function to join a group
+def join_group(request, group_id):
+    group = ChatGroup.objects.get(pk=group_id)
+
+    group.users.add(request.user)
+    group.save()
+
+    return redirect('/group/' + str(group.pk))

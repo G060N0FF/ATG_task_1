@@ -76,6 +76,24 @@
         {% endfor %}
     </div>
 
+    <div style="border: 1px solid black; border-radius: 8px; width: fit-content; padding: 6px;">
+        <h4>Search for groups:</h4>
+        <form method="post" action="{% url 'index' %}">
+            {% csrf_token %}
+            {{ find_group_form.as_p }}
+            <button type="submit">Search for  groups</button>
+        </form>
+    </div>
+
+    {% if found_groups %}
+        <h5>Results:</h5>
+        {% for f_group in found_groups %}
+            <p>{{ f_group.name }}</p>
+            <a href="{% url 'join_group' f_group.id %}">Join</a>
+        {% endfor %}
+    {% endif %}
+
+    <br>
     <br>
     <a href="/accounts/logout/?next=/">Logout</a>
 </body>
