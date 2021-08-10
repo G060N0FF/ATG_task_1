@@ -12,6 +12,8 @@
 <body>
     <h1>Group: {{ group.name }}</h1>
 
+    <a href="{% url 'chat' group.name %}">Join group chat</a>
+
     <a href="{% url 'leave_group' group.id %}" style="color: red;">Leave group</a>
 
     <div style="border: 1px solid black; border-radius: 8px; width: fit-content; padding: 6px;">

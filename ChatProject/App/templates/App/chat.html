@@ -33,7 +33,7 @@
     <script>
         function checkStatus(){
             // check the active status of the other user
-            if(room != 'lobby'){
+            if(room.includes('_')){
                 var room_members = room.split('-');
 
                 var other_user = '';
@@ -94,6 +94,7 @@
         chatSocket.onmessage = function(e) {
             const data = JSON.parse(e.data);
             displayMessage(data.message);
+            deleteButtons();
         };
 
         chatSocket.onclose = function(e) {
