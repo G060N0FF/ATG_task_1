@@ -95,7 +95,6 @@
             const data = JSON.parse(e.data);
             displayMessage(data.message);
             deleteButtons();
-            sendNotification(room);
         };
 
         chatSocket.onclose = function(e) {
@@ -233,23 +232,6 @@
             else{
                 console.log(file);
             }
-        }
-    </script>
-
-    <!--send notification-->
-    <script>
-        function sendNotification(room) {
-            $.ajax({
-                type: 'GET',
-                url: "{% url 'send_notification' %}",
-                data: {'room': room},
-                success: function (response) {
-                    console.log(response);
-                },
-                error: function (response) {
-                    console.log(response);
-                }
-            })
         }
     </script>
 </body>

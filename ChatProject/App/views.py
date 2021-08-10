@@ -228,16 +228,6 @@ def join_group(request, group_id):
 
 
 @login_required
-def send_notification(request):
-    room = request.GET.get('room', None)
-
-    new_noti = Notification(sender=room, receiver=request.user)
-    new_noti.save()
-
-    return JsonResponse({})
-
-
-@login_required
 def notifications(request):
     notis = request.user.notifications.all()
 

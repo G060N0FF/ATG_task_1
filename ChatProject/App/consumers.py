@@ -2,7 +2,8 @@ import json
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
 
-from .models import Message
+from .models import Message, Notification, ChatGroup
+from django.contrib.auth.models import User
 
 import base64
 from django.core.files.base import ContentFile
@@ -52,6 +53,18 @@ class ChatConsumer(WebsocketConsumer):
             new_message = Message.objects.create(user=self.user, group=self.room_name, image=data)
 
         new_msg = [self.user.username, message, str(new_message.date_time).split('.')[0], new_message.pk, new_message.image.url] if new_message.image else [self.user.username, message, str(new_message.date_time).split('.')[0], new_message.pk]
+
+        # send a notification
+        if '_' in self.room_name:
+            ids = self.room_name.split('_')
+            for id in ids:
+                temp_user = User.objects.get(pk=id)
+                new_noti = Notification(sender=self.room_name, receiver=temp_user)
+                new_noti.save()
+        elif self.room_name != 'lobby':
+            for temp_user in ChatGroup.objects.get(name=self.room_name).users.all():
+                new_noti = Notification(sender=self.room_name, receiver=temp_user)
+                new_noti.save()
 
         # Send message to room group
         async_to_sync(self.channel_layer.group_send)(
