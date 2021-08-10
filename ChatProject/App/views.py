@@ -4,7 +4,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate
 from .forms import SearchForm, PictureForm, ChatGroupForm, FindGroupForm
-from .models import Message, ChatGroup
+from .models import Message, ChatGroup, Notification
 from django.http import JsonResponse
 
 
@@ -165,6 +165,7 @@ def check_status(request):
     )
 
 
+@login_required
 # a view to see group options
 def group(request, group_id):
     group = ChatGroup.objects.get(pk=group_id)
@@ -186,6 +187,7 @@ def group(request, group_id):
     return render(request, 'App/group.html', context)
 
 
+@login_required
 # a view to add group members
 def add_to_group(request, group_id, user_id):
     group = ChatGroup.objects.get(pk=group_id)
@@ -200,6 +202,7 @@ def add_to_group(request, group_id, user_id):
     return redirect('/group/'+str(group.pk))
 
 
+@login_required
 # a function to leave a group
 def leave_group(request, group_id):
     group = ChatGroup.objects.get(pk=group_id)
@@ -213,6 +216,7 @@ def leave_group(request, group_id):
     return redirect('/group/'+str(group.pk))
 
 
+@login_required
 # a function to join a group
 def join_group(request, group_id):
     group = ChatGroup.objects.get(pk=group_id)
@@ -221,3 +225,21 @@ def join_group(request, group_id):
     group.save()
 
     return redirect('/group/' + str(group.pk))
+
+
+@login_required
+def send_notification(request):
+    room = request.GET.get('room', None)
+
+    new_noti = Notification(sender=room, receiver=request.user)
+    new_noti.save()
+
+    return JsonResponse({})
+
+
+@login_required
+def notifications(request):
+    notis = request.user.notifications.all()
+
+    context = {'notis': notis}
+    return render(request, 'App/notifications.html', context)

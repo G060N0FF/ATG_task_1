@@ -28,4 +28,8 @@ urlpatterns = [
     path('leave_group/<path:group_id>/', views.leave_group, name='leave_group'),
     # a path to join a group
     path('join_group/<path:group_id>/', views.join_group, name='join_group'),
+    # a path to send a notification
+    path('send_notification/', views.send_notification, name='send_notification'),
+    # a path to see all notifications
+    path('notifications/', views.notifications, name='notifications')
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

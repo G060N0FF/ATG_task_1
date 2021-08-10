@@ -116,6 +116,7 @@
                 'dataURL': ''
             }));
             messageInputDom.value = '';
+            sendNotification(room);
         };
 
         document.getElementById('chat-image-input').addEventListener('change', function(event){
@@ -127,6 +128,7 @@
                     'dataURL': dataURL
                 }))
             })
+            sendNotification(room);
         })
     </script>
 
@@ -218,7 +220,7 @@
         deleteButtons();
     </script>
 
-    <!---->
+    <!--to base64-->
     <script>
         function toDataURL(file, callback) {
             if(file){
@@ -232,6 +234,23 @@
             else{
                 console.log(file);
             }
+        }
+    </script>
+
+    <!--send notification-->
+    <script>
+        function sendNotification(room) {
+            $.ajax({
+                type: 'GET',
+                url: "{% url 'send_notification' %}",
+                data: {'room': room},
+                success: function (response) {
+                    console.log(response);
+                },
+                error: function (response) {
+                    console.log(response);
+                }
+            })
         }
     </script>
 </body>

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Notifications</title>
+    <style>
+        html, body{
+            font-family: 'Source Sans Pro', sans-serif;
+        }
+    </style>
+</head>
+<body>
+    {% for n in notis %}
+        <p>New message in {{ n.sender }}.</p>
+        <a href="{% url 'chat' n.sender %}">See the message here!</a>
+    {% endfor %}
+</body>
+</html>

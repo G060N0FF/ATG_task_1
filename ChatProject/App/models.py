@@ -26,6 +26,12 @@ class ChatGroup(models.Model):
     name = models.CharField(max_length=200, unique=True)
 
 
+# a model for notifications
+class Notification(models.Model):
+    sender = models.CharField(max_length=200)
+    receiver = models.ForeignKey(get_user_model(), related_name='notifications', on_delete=models.CASCADE, null=True)
+
+
 @receiver(post_save, sender=User)
 def update_profile_signal(sender, instance, created, **kwargs):
     if created:
