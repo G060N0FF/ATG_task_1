@@ -12,6 +12,8 @@
 <body>
     <h1>Group: {{ group.name }}</h1>
 
+    <a href="{% url 'leave_group' group.id %}" style="color: red;">Leave group</a>
+
     <div style="border: 1px solid black; border-radius: 8px; width: fit-content; padding: 6px;">
         <h3>Members:</h3>
         {% for member in group.users.all %}

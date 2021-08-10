@@ -24,4 +24,6 @@ urlpatterns = [
     path('group/<path:group_id>', views.group, name='group'),
     # a path to add users to the group
     path('add_to_group/<path:group_id>/<path:user_id>/', views.add_to_group, name='add_to_group'),
+    # a path to leave the group
+    path('leave_group/<path:group_id>/', views.leave_group, name='leave_group'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

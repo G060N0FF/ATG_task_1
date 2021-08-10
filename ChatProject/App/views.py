@@ -185,3 +185,16 @@ def add_to_group(request, group_id, user_id):
     group.save()
 
     return redirect('/group/'+str(group.pk))
+
+
+# a function to leave a group
+def leave_group(request, group_id):
+    group = ChatGroup.objects.get(pk=group_id)
+
+    # security check
+    if request.user not in group.users.all():
+        return redirect('/')
+
+    group.users.remove(request.user)
+
+    return redirect('/group/'+str(group.pk))
