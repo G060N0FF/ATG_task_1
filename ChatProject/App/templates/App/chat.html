@@ -95,6 +95,7 @@
             const data = JSON.parse(e.data);
             displayMessage(data.message);
             deleteButtons();
+            sendNotification(room);
         };
 
         chatSocket.onclose = function(e) {
@@ -116,7 +117,6 @@
                 'dataURL': ''
             }));
             messageInputDom.value = '';
-            sendNotification(room);
         };
 
         document.getElementById('chat-image-input').addEventListener('change', function(event){
@@ -128,7 +128,6 @@
                     'dataURL': dataURL
                 }))
             })
-            sendNotification(room);
         })
     </script>
 
